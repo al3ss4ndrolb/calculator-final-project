@@ -1,6 +1,29 @@
-const displayNumbers => () {
-  
-}
+const display = document.querySelector(".display");
+const buttons = document.querySelectorAll(".button-container button");
+
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const value = button.textContent;
+
+    if (value === "Clear") {
+      display.textContent = "0"; // Reset the display
+    } else if (value === "=") {
+      try {
+        // Evaluate the expression in the display
+        display.textContent = eval(display.textContent);
+      } catch (error) {
+        display.textContent = "Error"; // Handle invalid expressions
+      }
+    } else {
+      // If display is "0", replace it; otherwise, append the value
+      if (display.textContent === "0") {
+        display.textContent = value;
+      } else {
+        display.textContent += value;
+      }
+    }
+  });
+});
 
 const add = (a, b) => a + b;
 
