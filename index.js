@@ -1,5 +1,5 @@
 const display = document.querySelector(".display");
-const buttons = document.querySelectorAll(".button-container button");
+const buttons = document.querySelectorAll(".calculator-container button");
 
 let firstNumber = "";
 let secondNumber = "";
@@ -59,8 +59,19 @@ const clearCalculator = () => {
 
 const evaluate = () => {
   if (!operator || !firstNumber || shouldResetDisplay) return;
+
   secondNumber = display.textContent;
   const result = operate(operator, firstNumber, secondNumber);
+
+  // Check for invalid results (like division by zero)
+  if (result === "Error") {
+    display.textContent = "Error";
+    firstNumber = "";
+    operator = null;
+    shouldResetDisplay = true;
+    return;
+  }
+
   display.textContent = result;
   firstNumber = result.toString();
   secondNumber = "";
@@ -85,3 +96,5 @@ const appendNumber = (number) => {
     display.textContent += number; // Append the number to the display
   }
 };
+
+const isOperator = (value) => ["+", "-", "*", "/"].includes(value);
