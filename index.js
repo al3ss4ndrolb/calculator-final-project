@@ -79,9 +79,9 @@ const setOperator = (op) => {
 
 const appendNumber = (number) => {
   if (display.textContent === "0" || shouldResetDisplay) {
-    display.textContent = number;
-    shouldResetDisplay = false;
+    display.textContent = number; // Replace the display content
+    shouldResetDisplay = false; // Reset this flag after updating the display
   } else {
-    display.textContent += number;
+    display.textContent += number; // Append the number to the display
   }
 };
