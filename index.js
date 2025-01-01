@@ -1,60 +1,87 @@
 const display = document.querySelector(".display");
 const buttons = document.querySelectorAll(".button-container button");
 
+let firstNumber = "";
+let secondNumber = "";
+let operator = null;
+let shouldResetDisplay = false; // Used to reset display after an operator
+
+// Functions for basic math operations
+const add = (a, b) => a + b;
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+const divide = (a, b) => (b === 0 ? "Error" : a / b);
+
+// Main operate function
+const operate = (operator, firstNumber, secondNumber) => {
+  const a = parseFloat(firstNumber);
+  const b = parseFloat(secondNumber);
+
+  switch (operator) {
+    case "+":
+      return add(a, b);
+    case "-":
+      return subtract(a, b);
+    case "*":
+      return multiply(a, b);
+    case "/":
+      return divide(a, b);
+    default:
+      return "Error";
+  }
+};
+
+// Update display with button clicks
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
     const value = button.textContent;
 
     if (value === "Clear") {
-      display.textContent = "0"; // Reset the display
+      clearCalculator();
     } else if (value === "=") {
-      try {
-        // Evaluate the expression in the display
-        display.textContent = eval(display.textContent);
-      } catch (error) {
-        display.textContent = "Error"; // Handle invalid expressions
-      }
+      evaluate();
+    } else if (isOperator(value)) {
+      setOperator(value);
     } else {
-      // If display is "0", replace it; otherwise, append the value
-      if (display.textContent === "0") {
-        display.textContent = value;
-      } else {
-        display.textContent += value;
-      }
+      appendNumber(value);
     }
   });
 });
 
-const add = (a, b) => a + b;
-
-const subtract = (a, b) => a - b;
-
-const multiply = (a, b) => a * b;
-
-const divide = (a, b) => {
-  if (b === 0) {
-    return "Error: Cannot divide by zero";
-  }
-
-  return a / b;
+// Helper functions
+const clearCalculator = () => {
+  display.textContent = "0";
+  firstNumber = "";
+  secondNumber = "";
+  operator = null;
+  shouldResetDisplay = false;
 };
 
-let firstNumber = 0;
-let secondNumber = 0;
-let operator;
+const evaluate = () => {
+  if (!operator || !firstNumber || shouldResetDisplay) return;
+  secondNumber = display.textContent;
+  const result = operate(operator, firstNumber, secondNumber);
+  display.textContent = result;
+  firstNumber = result.toString();
+  secondNumber = "";
+  operator = null;
+  shouldResetDisplay = true;
+};
 
-const operate = (operator, firstNumber, secondNumber) => {
-  switch (operator) {
-    case "+":
-      return add(firstNumber, secondNumber);
-    case "-":
-      return subtract(firstNumber, secondNumber);
-    case "*":
-      return multiply(firstNumber, secondNumber);
-    case "/":
-      return divide(firstNumber, secondNumber);
+const setOperator = (op) => {
+  if (operator && !shouldResetDisplay) {
+    evaluate();
+  }
+  operator = op;
+  firstNumber = display.textContent;
+  shouldResetDisplay = true;
+};
 
-    default:
-      return alert("invalid operator");
+const appendNumber = (number) => {
+  if (display.textContent === "0" || shouldResetDisplay) {
+    display.textContent = number;
+    shouldResetDisplay = false;
+  } else {
+    display.textContent += number;
   }
 };
