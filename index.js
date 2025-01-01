@@ -31,18 +31,19 @@ const operate = (operator, firstNumber, secondNumber) => {
   }
 };
 
-// Update display with button clicks
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
     const value = button.textContent;
 
-    if (value === "Clear") {
+    if (value === "C") {
+      // Ensure this clears the calculator
       clearCalculator();
     } else if (value === "=") {
       evaluate();
     } else if (isOperator(value)) {
       setOperator(value);
-    } else {
+    } else if (!isNaN(value)) {
+      // Append only valid numbers
       appendNumber(value);
     }
   });
